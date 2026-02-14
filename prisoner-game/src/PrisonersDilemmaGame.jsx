@@ -12,6 +12,19 @@ const pixelFont = `
 input, button {
   font-family: 'Press Start 2P', monospace !important;
 }
+
+@keyframes kneeBob {
+  0%, 100% { 
+    transform: translateY(0) scaleY(1); 
+  }
+  50% { 
+    transform: translateY(2px) scaleY(0.97); 
+  }
+}
+
+.prisoner-bob {
+  animation: kneeBob 0.6s ease-in-out infinite;
+}
 `;
 
 // AI Strategy definitions
@@ -188,16 +201,19 @@ const AI_OPPONENTS = [
 ];
 
 // Pixel art component for prisoner
-const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8 }) => {
+const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, animationDelay = 0 }) => {
   const scale = size;
   
   return (
-    <div style={{ 
-      display: 'inline-block', 
-      imageRendering: 'pixelated',
-      transform: `scale(${scale})`,
-      transformOrigin: 'center'
-    }}>
+    <div 
+      className="prisoner-bob"
+      style={{ 
+        display: 'inline-block', 
+        imageRendering: 'pixelated',
+        transform: `scale(${scale})`,
+        transformOrigin: 'center bottom',
+        animationDelay: `${animationDelay}s`
+      }}>
       <svg width="16" height="24" viewBox="0 0 16 24" style={{ imageRendering: 'pixelated' }}>
         {/* Shoes */}
         <rect x="4" y="22" width="3" height="2" fill={shoeColor} />
@@ -427,10 +443,10 @@ const PrisonersDilemmaGame = () => {
           {/* Header */}
           <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4 text-center">
             <h1 className="text-5xl font-bold text-green-400 mb-2">
-              PRISONER'S DILEMMA
+              Axelrod's Prison
             </h1>
             <p className="text-gray-400 text-lg">
-              Play Against AI Prisoners
+              Cooperate or Defect, But Win to Escape!
             </p>
           </div>
 
@@ -505,7 +521,7 @@ const PrisonersDilemmaGame = () => {
               THE PRISONERS
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              {AI_OPPONENTS.map(opponent => (
+              {AI_OPPONENTS.map((opponent, index) => (
                 <div key={opponent.id} className="bg-gray-900 border-2 border-gray-700 p-3 text-center">
                   <div className="mb-2 flex justify-center">
                     <PixelPrisoner 
@@ -514,6 +530,7 @@ const PrisonersDilemmaGame = () => {
                       hatColor={opponent.hatColor}
                       shoeColor={opponent.shoeColor}
                       size={3}
+                      animationDelay={index * 0.1}
                     />
                   </div>
                   <div className="text-green-400 text-sm font-bold">
