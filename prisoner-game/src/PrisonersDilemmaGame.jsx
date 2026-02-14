@@ -40,6 +40,25 @@ input, button {
 .prisoner-shadow {
   animation: shadowPulse 0.6s ease-in-out infinite;
 }
+
+@keyframes pixelShake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-4px); }
+  20% { transform: translateX(4px); }
+  30% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  50% { transform: translateX(-2px); }
+  60% { transform: translateX(2px); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+  90% { transform: translateX(-1px); }
+}
+
+.name-error {
+  animation: pixelShake 0.5s ease-in-out;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.5), inset 0 0 10px rgba(239, 68, 68, 0.2);
+}
 `;
 
 // AI Strategy definitions
@@ -348,6 +367,7 @@ const PrisonersDilemmaGame = () => {
     }
   });
   const [showInstructions, setShowInstructions] = useState(false);
+  const [nameError, setNameError] = useState(false);
 
   const saveGameData = (stats, history) => {
     try {
@@ -363,7 +383,12 @@ const PrisonersDilemmaGame = () => {
 
   const startGame = () => {
     if (!playerName.trim()) {
-      window.alert('Please enter your name!');
+      setNameError(true);
+      // Reset the animation by removing and re-adding the class
+      setTimeout(() => setNameError(false), 500);
+      setTimeout(() => {
+        if (!playerName.trim()) setNameError(true);
+      }, 510);
       return;
     }
     
@@ -495,10 +520,13 @@ const PrisonersDilemmaGame = () => {
             <input
               type="text"
               value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
+              onChange={(e) => {
+                setPlayerName(e.target.value);
+                if (e.target.value.trim()) setNameError(false);
+              }}
               onKeyPress={(e) => e.key === 'Enter' && startGame()}
               placeholder="Enter your name..."
-              className="w-full bg-gray-900 border-2 border-gray-600 text-green-400 p-3 text-lg"
+              className={`w-full bg-gray-900 border-2 text-green-400 p-3 text-lg ${nameError ? 'name-error' : 'border-gray-600'}`}
               maxLength={20}
             />
           </div>
@@ -544,9 +572,9 @@ const PrisonersDilemmaGame = () => {
               <div className="mt-4 text-green-300 space-y-2" style={{ fontSize: '14px' }}>
                 <p className="text-gray-400 italic mb-3">"Everybody in here is innocent. Didn't you know that?"</p>
                 <p className="text-gray-300 mb-3">Listen up, fresh meat. You and your so-called "accomplices" are gonna be taken in for questioning. One at a time, we'll put you in a room with each of them. You can stay silent or rat them out. Here's how it works:</p>
-                <p>• Both stay silent (cooperate): 3 pts each</p>
-                <p>• Both rat each other out (defect): 1 pt each</p>
-                <p>• One rats, one stays silent: 5 pts (rat), 0 pts (sucker)</p>
+                <p>• Both stay silent (cooperate): 3 gold each</p>
+                <p>• Both rat each other out (defect): 1 gold each</p>
+                <p>• One rats, one stays silent: 5 gold (rat), 0 gold (sucker)</p>
                 <p className="mt-3 text-gray-300">You'll face each accomplice multiple times. They remember what you did last time... and so should you.</p>
                 <p className="mt-3 text-yellow-400 italic">Word around the yard is, the prisoner with the most points gets to walk free. Just saying.</p>
               </div>
