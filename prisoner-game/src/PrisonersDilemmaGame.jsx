@@ -25,6 +25,21 @@ input, button {
 .prisoner-bob {
   animation: kneeBob 0.6s ease-in-out infinite;
 }
+
+@keyframes shadowPulse {
+  0%, 100% { 
+    transform: scaleX(1) scaleY(1);
+    opacity: 0.4;
+  }
+  50% { 
+    transform: scaleX(1.15) scaleY(1.1);
+    opacity: 0.6;
+  }
+}
+
+.prisoner-shadow {
+  animation: shadowPulse 0.6s ease-in-out infinite;
+}
 `;
 
 // AI Strategy definitions
@@ -201,77 +216,98 @@ const AI_OPPONENTS = [
 ];
 
 // Pixel art component for prisoner
-const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, animationDelay = 0 }) => {
+const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, animationDelay = 0, showShadow = true }) => {
   const scale = size;
   
   return (
-    <div 
-      className="prisoner-bob"
-      style={{ 
-        display: 'inline-block', 
-        imageRendering: 'pixelated',
-        transform: `scale(${scale})`,
-        transformOrigin: 'center bottom',
-        animationDelay: `${animationDelay}s`
-      }}>
-      <svg width="16" height="24" viewBox="0 0 16 24" style={{ imageRendering: 'pixelated' }}>
-        {/* Shoes */}
-        <rect x="4" y="22" width="3" height="2" fill={shoeColor} />
-        <rect x="9" y="22" width="3" height="2" fill={shoeColor} />
-        
-        {/* Legs (striped pants) */}
-        <rect x="4" y="16" width="3" height="6" fill="#ffffff" />
-        <rect x="9" y="16" width="3" height="6" fill="#ffffff" />
-        <rect x="4" y="17" width="3" height="1" fill="#000000" />
-        <rect x="9" y="17" width="3" height="1" fill="#000000" />
-        <rect x="4" y="19" width="3" height="1" fill="#000000" />
-        <rect x="9" y="19" width="3" height="1" fill="#000000" />
-        <rect x="4" y="21" width="3" height="1" fill="#000000" />
-        <rect x="9" y="21" width="3" height="1" fill="#000000" />
-        
-        {/* Body (striped shirt) */}
-        <rect x="3" y="10" width="10" height="6" fill="#ffffff" />
-        <rect x="3" y="11" width="10" height="1" fill="#000000" />
-        <rect x="3" y="13" width="10" height="1" fill="#000000" />
-        <rect x="3" y="15" width="10" height="1" fill="#000000" />
-        
-        {/* Arms */}
-        <rect x="1" y="11" width="2" height="4" fill="#ffffff" />
-        <rect x="13" y="11" width="2" height="4" fill="#ffffff" />
-        <rect x="1" y="12" width="2" height="1" fill="#000000" />
-        <rect x="13" y="12" width="2" height="1" fill="#000000" />
-        
-        {/* Hands */}
-        <rect x="1" y="15" width="2" height="2" fill={skinTone} />
-        <rect x="13" y="15" width="2" height="2" fill={skinTone} />
-        
-        {/* Head */}
-        <rect x="5" y="4" width="6" height="6" fill={skinTone} />
-        
-        {/* Eyes */}
-        <rect x="6" y="6" width="1" height="1" fill="#000000" />
-        <rect x="9" y="6" width="1" height="1" fill="#000000" />
-        
-        {/* Mouth */}
-        <rect x="7" y="8" width="2" height="1" fill="#000000" />
-        
-        {/* Hair */}
-        {hairColor && (
-          <>
-            <rect x="5" y="3" width="6" height="2" fill={hairColor} />
-            <rect x="4" y="4" width="1" height="3" fill={hairColor} />
-            <rect x="11" y="4" width="1" height="3" fill={hairColor} />
-          </>
-        )}
-        
-        {/* Hat */}
-        {hatColor && (
-          <>
-            <rect x="5" y="2" width="6" height="2" fill={hatColor} />
-            <rect x="4" y="2" width="8" height="1" fill={hatColor} />
-          </>
-        )}
-      </svg>
+    <div style={{ 
+      display: 'inline-flex', 
+      flexDirection: 'column',
+      alignItems: 'center',
+      position: 'relative'
+    }}>
+      <div 
+        className="prisoner-bob"
+        style={{ 
+          display: 'inline-block', 
+          imageRendering: 'pixelated',
+          transform: `scale(${scale})`,
+          transformOrigin: 'center bottom',
+          animationDelay: `${animationDelay}s`
+        }}>
+        <svg width="16" height="24" viewBox="0 0 16 24" style={{ imageRendering: 'pixelated' }}>
+          {/* Shoes */}
+          <rect x="4" y="22" width="3" height="2" fill={shoeColor} />
+          <rect x="9" y="22" width="3" height="2" fill={shoeColor} />
+          
+          {/* Legs (striped pants) */}
+          <rect x="4" y="16" width="3" height="6" fill="#ffffff" />
+          <rect x="9" y="16" width="3" height="6" fill="#ffffff" />
+          <rect x="4" y="17" width="3" height="1" fill="#000000" />
+          <rect x="9" y="17" width="3" height="1" fill="#000000" />
+          <rect x="4" y="19" width="3" height="1" fill="#000000" />
+          <rect x="9" y="19" width="3" height="1" fill="#000000" />
+          <rect x="4" y="21" width="3" height="1" fill="#000000" />
+          <rect x="9" y="21" width="3" height="1" fill="#000000" />
+          
+          {/* Body (striped shirt) */}
+          <rect x="3" y="10" width="10" height="6" fill="#ffffff" />
+          <rect x="3" y="11" width="10" height="1" fill="#000000" />
+          <rect x="3" y="13" width="10" height="1" fill="#000000" />
+          <rect x="3" y="15" width="10" height="1" fill="#000000" />
+          
+          {/* Arms */}
+          <rect x="1" y="11" width="2" height="4" fill="#ffffff" />
+          <rect x="13" y="11" width="2" height="4" fill="#ffffff" />
+          <rect x="1" y="12" width="2" height="1" fill="#000000" />
+          <rect x="13" y="12" width="2" height="1" fill="#000000" />
+          
+          {/* Hands */}
+          <rect x="1" y="15" width="2" height="2" fill={skinTone} />
+          <rect x="13" y="15" width="2" height="2" fill={skinTone} />
+          
+          {/* Head */}
+          <rect x="5" y="4" width="6" height="6" fill={skinTone} />
+          
+          {/* Eyes */}
+          <rect x="6" y="6" width="1" height="1" fill="#000000" />
+          <rect x="9" y="6" width="1" height="1" fill="#000000" />
+          
+          {/* Mouth */}
+          <rect x="7" y="8" width="2" height="1" fill="#000000" />
+          
+          {/* Hair */}
+          {hairColor && (
+            <>
+              <rect x="5" y="3" width="6" height="2" fill={hairColor} />
+              <rect x="4" y="4" width="1" height="3" fill={hairColor} />
+              <rect x="11" y="4" width="1" height="3" fill={hairColor} />
+            </>
+          )}
+          
+          {/* Hat */}
+          {hatColor && (
+            <>
+              <rect x="5" y="2" width="6" height="2" fill={hatColor} />
+              <rect x="4" y="2" width="8" height="1" fill={hatColor} />
+            </>
+          )}
+        </svg>
+      </div>
+      {/* Shadow */}
+      {showShadow && (
+        <div 
+          className="prisoner-shadow"
+          style={{
+            width: `${12 * scale}px`,
+            height: `${4 * scale}px`,
+            backgroundColor: '#000',
+            borderRadius: '50%',
+            marginTop: `${-2 * scale}px`,
+            animationDelay: `${animationDelay}s`
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -307,7 +343,7 @@ const PrisonersDilemmaGame = () => {
       if (nameData) {
         setPlayerName(JSON.parse(nameData));
       }
-    } catch (error) {
+    } catch {
       console.log('No saved data found, starting fresh');
     }
   };
@@ -499,13 +535,13 @@ const PrisonersDilemmaGame = () => {
               onClick={() => setShowInstructions(!showInstructions)}
               className="w-full text-left text-yellow-400 text-xl font-bold flex items-center justify-between"
             >
-              <span>📖 THE RULES</span>
+              <span>BUT I'M INNOCENT!?</span>
               <span>{showInstructions ? '▲' : '▼'}</span>
             </button>
             
             {showInstructions && (
               <div className="mt-4 text-green-300 space-y-2" style={{ fontSize: '14px' }}>
-                <p>• Both cooperate: 3 pts each</p>
+                <p>"Everybody in here is innocent. Didn't you know that?"</p>
                 <p>• Both defect: 1 pt each</p>
                 <p>• One defects: 5 pts (defector), 0 pts (cooperator)</p>
                 <p className="mt-4 text-yellow-400">• Face random AI prisoners with different strategies</p>
@@ -520,28 +556,17 @@ const PrisonersDilemmaGame = () => {
             <h2 className="text-yellow-400 text-xl mb-4">
               THE PRISONERS
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="flex flex-wrap justify-center gap-6">
               {AI_OPPONENTS.map((opponent, index) => (
-                <div key={opponent.id} className="bg-gray-900 border-2 border-gray-700 p-3 text-center">
-                  <div className="mb-2 flex justify-center">
-                    <PixelPrisoner 
-                      skinTone={opponent.skinTone}
-                      hairColor={opponent.hairColor}
-                      hatColor={opponent.hatColor}
-                      shoeColor={opponent.shoeColor}
-                      size={3}
-                      animationDelay={index * 0.1}
-                    />
-                  </div>
-                  <div className="text-green-400 text-sm font-bold">
-                    {opponent.name}
-                  </div>
-                  {gameHistory[opponent.id] && (
-                    <div className="text-gray-400 text-xs mt-1">
-                      {gameHistory[opponent.id].length} games
-                    </div>
-                  )}
-                </div>
+                <PixelPrisoner 
+                  key={opponent.id}
+                  skinTone={opponent.skinTone}
+                  hairColor={opponent.hairColor}
+                  hatColor={opponent.hatColor}
+                  shoeColor={opponent.shoeColor}
+                  size={3}
+                  animationDelay={index * 0.1}
+                />
               ))}
             </div>
           </div>
