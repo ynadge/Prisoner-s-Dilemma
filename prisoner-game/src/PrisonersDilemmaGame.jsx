@@ -235,7 +235,7 @@ const AI_OPPONENTS = [
 ];
 
 // Pixel art component for prisoner
-const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, shadowSize = null, animationDelay = 0, showShadow = true }) => {
+const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 6, shadowSize = null, animationDelay = 0, showShadow = true }) => {
   const scale = size;
   const shadowScale = shadowSize ?? size; // Use shadowSize if provided, otherwise match size
   
@@ -507,14 +507,14 @@ const PrisonersDilemmaGame = () => {
             <h1 className="text-5xl font-bold text-green-400 mb-2">
               Axelrod's Prison
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-base">
               A Game That Teaches You Game Theory...<br></br>If You Play it a Hundred Times
             </p>
           </div>
 
           {/* Player name input */}
           <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
-            <label className="text-yellow-400 text-xl mb-2 block">
+            <label className="text-yellow-400 text-base mb-2 block">
               YOUR PRISONER NAME
             </label>
             <input
@@ -526,7 +526,7 @@ const PrisonersDilemmaGame = () => {
               }}
               onKeyPress={(e) => e.key === 'Enter' && startGame()}
               placeholder="Enter your name..."
-              className={`w-full bg-gray-900 border-2 text-green-400 p-3 text-lg ${nameError ? 'name-error' : 'border-gray-600'}`}
+              className={`w-full bg-gray-900 border-2 text-green-400 p-3 text-base ${nameError ? 'name-error' : 'border-gray-600'}`}
               maxLength={20}
             />
           </div>
@@ -534,25 +534,25 @@ const PrisonersDilemmaGame = () => {
           {/* Stats */}
           {playerStats.gamesPlayed > 0 && (
             <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
-              <h2 className="text-yellow-400 text-xl mb-3">
+              <h2 className="text-yellow-400 text-base mb-3">
                 YOUR STATS
               </h2>
               <div className="grid grid-cols-4 gap-4 text-center">
                 <div>
-                  <div className="text-gray-400 text-sm">SCORE</div>
-                  <div className="text-yellow-400 text-2xl font-bold">{playerStats.totalScore}</div>
+                  <div className="text-gray-400 text-xs">SCORE</div>
+                  <div className="text-yellow-400 text-base font-bold">{playerStats.totalScore}</div>
                 </div>
                 <div>
-                  <div className="text-gray-400 text-sm">GAMES</div>
-                  <div className="text-green-400 text-2xl font-bold">{playerStats.gamesPlayed}</div>
+                  <div className="text-gray-400 text-xs">GAMES</div>
+                  <div className="text-green-400 text-base font-bold">{playerStats.gamesPlayed}</div>
                 </div>
                 <div>
-                  <div className="text-gray-400 text-sm">COOPERATE</div>
-                  <div className="text-blue-400 text-2xl font-bold">{playerStats.cooperations}</div>
+                  <div className="text-gray-400 text-xs">COOPERATE</div>
+                  <div className="text-blue-400 text-base font-bold">{playerStats.cooperations}</div>
                 </div>
                 <div>
-                  <div className="text-gray-400 text-sm">DEFECT</div>
-                  <div className="text-red-400 text-2xl font-bold">{playerStats.defections}</div>
+                  <div className="text-gray-400 text-xs">DEFECT</div>
+                  <div className="text-red-400 text-base font-bold">{playerStats.defections}</div>
                 </div>
               </div>
             </div>
@@ -562,14 +562,14 @@ const PrisonersDilemmaGame = () => {
           <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
             <button
               onClick={() => setShowInstructions(!showInstructions)}
-              className="w-full text-left text-yellow-400 text-xl font-bold flex items-center justify-between"
+              className="w-full text-left text-yellow-400 text-base font-bold flex items-center justify-between"
             >
               <span>BUT I'M INNOCENT!?</span>
               <span>{showInstructions ? '▲' : '▼'}</span>
             </button>
             
             {showInstructions && (
-              <div className="mt-4 text-green-300 space-y-2" style={{ fontSize: '14px' }}>
+              <div className="mt-4 text-green-300 space-y-2" style={{ fontSize: '11px' }}>
                 <p className="text-gray-400 italic mb-3">"Everybody in here is innocent. Didn't you know that?"</p>
                 <p className="text-gray-300 mb-3">Listen up, fresh meat. You and your so-called "accomplices" are gonna be taken in for questioning. One at a time, we'll put you in a room with each of them. You can stay silent or rat them out. Here's how it works:</p>
                 <p>• Both stay silent (cooperate): 3 gold each</p>
@@ -583,10 +583,10 @@ const PrisonersDilemmaGame = () => {
 
           {/* AI Opponents showcase */}
           <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
-            <h2 className="text-yellow-400 text-xl mb-4">
+            <h2 className="text-yellow-400 text-base mb-4">
               THE PRISONERS
             </h2>
-            <div className="grid grid-cols-5 gap-6 justify-items-center pt-30">
+            <div className="grid grid-cols-5 gap-6 justify-items-center pt-20">
               {AI_OPPONENTS.map((opponent, index) => (
                 <PixelPrisoner 
                   key={opponent.id}
@@ -594,8 +594,8 @@ const PrisonersDilemmaGame = () => {
                   hairColor={opponent.hairColor}
                   hatColor={opponent.hatColor}
                   shoeColor={opponent.shoeColor}
-                  size={6}
-                  shadowSize={3}
+                  size={4.5}
+                  shadowSize={2}
                   animationDelay={index * 0.1}
                 />
               ))}
@@ -606,7 +606,7 @@ const PrisonersDilemmaGame = () => {
           <div className="space-y-3">
             <button
               onClick={startGame}
-              className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-6 border-4 border-green-800 text-xl"
+              className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-6 border-4 border-green-800 text-base"
             >
               QUESTIONING TIME
             </button>
@@ -640,7 +640,7 @@ const PrisonersDilemmaGame = () => {
           <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-3xl text-red-400 font-bold">
+                <h2 className="text-base text-red-400 font-bold">
                   {currentOpponent.name}
                 </h2>
                 <p className="text-gray-400">
@@ -653,7 +653,7 @@ const PrisonersDilemmaGame = () => {
                   hairColor={currentOpponent.hairColor}
                   hatColor={currentOpponent.hatColor}
                   shoeColor={currentOpponent.shoeColor}
-                  size={6}
+                  size={4.5}
                 />
               </div>
             </div>
@@ -661,7 +661,7 @@ const PrisonersDilemmaGame = () => {
             <div className="bg-gray-900 border-2 border-gray-700 p-3">
               <div className="flex items-center gap-2 text-yellow-400">
                 <Brain size={20} />
-                <span className="text-sm">{currentOpponent.personality}</span>
+                <span className="text-xs">{currentOpponent.personality}</span>
               </div>
             </div>
           </div>
@@ -669,7 +669,7 @@ const PrisonersDilemmaGame = () => {
           {/* History with this opponent */}
           {opponentHistory.length > 0 && (
             <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
-              <h3 className="text-yellow-400 text-xl mb-3">
+              <h3 className="text-yellow-400 text-base mb-3">
                 PREVIOUS ENCOUNTERS WITH {currentOpponent.name.toUpperCase()}
               </h3>
               <div className="space-y-2">
@@ -703,7 +703,7 @@ const PrisonersDilemmaGame = () => {
 
           {/* Choice interface */}
           <div className="bg-gray-800 border-4 border-gray-600 p-6 mb-4">
-            <h3 className="text-2xl text-yellow-400 text-center mb-6">
+            <h3 className="text-base text-yellow-400 text-center mb-6">
               MAKE YOUR CHOICE
             </h3>
 
@@ -713,10 +713,10 @@ const PrisonersDilemmaGame = () => {
                 className="bg-blue-600 hover:bg-blue-500 border-4 border-blue-800 p-8 flex flex-col items-center gap-4 transition-transform hover:scale-105"
               >
                 <ThumbsUp size={64} className="text-white" />
-                <span className="text-white text-2xl font-bold">
+                <span className="text-white text-base font-bold">
                   COOPERATE
                 </span>
-                <span className="text-blue-200 text-sm">
+                <span className="text-blue-200 text-xs">
                   Stay silent (3/3 if both)
                 </span>
               </button>
@@ -726,10 +726,10 @@ const PrisonersDilemmaGame = () => {
                 className="bg-red-600 hover:bg-red-500 border-4 border-red-800 p-8 flex flex-col items-center gap-4 transition-transform hover:scale-105"
               >
                 <ThumbsDown size={64} className="text-white" />
-                <span className="text-white text-2xl font-bold">
+                <span className="text-white text-base font-bold">
                   DEFECT
                 </span>
-                <span className="text-red-200 text-sm">
+                <span className="text-red-200 text-xs">
                   Betray them (5/0 if they cooperate)
                 </span>
               </button>
@@ -740,22 +740,22 @@ const PrisonersDilemmaGame = () => {
           <div className="bg-gray-800 border-4 border-gray-600 p-4">
             <div className="grid grid-cols-4 gap-4 text-center">
               <div>
-                <div className="text-gray-400 text-sm">TOTAL SCORE</div>
-                <div className="text-yellow-400 text-xl font-bold">{playerStats.totalScore}</div>
+                <div className="text-gray-400 text-xs">TOTAL SCORE</div>
+                <div className="text-yellow-400 text-base font-bold">{playerStats.totalScore}</div>
               </div>
               <div>
-                <div className="text-gray-400 text-sm">GAMES</div>
-                <div className="text-green-400 text-xl font-bold">{playerStats.gamesPlayed}</div>
+                <div className="text-gray-400 text-xs">GAMES</div>
+                <div className="text-green-400 text-base font-bold">{playerStats.gamesPlayed}</div>
               </div>
               <div>
-                <div className="text-gray-400 text-sm">WIN RATE</div>
-                <div className="text-blue-400 text-xl font-bold">
+                <div className="text-gray-400 text-xs">WIN RATE</div>
+                <div className="text-blue-400 text-base font-bold">
                   {playerStats.gamesPlayed > 0 ? Math.round((playerStats.cooperations / playerStats.gamesPlayed) * 100) : 0}%
                 </div>
               </div>
               <div>
-                <div className="text-gray-400 text-sm">AVG SCORE</div>
-                <div className="text-yellow-400 text-xl font-bold">
+                <div className="text-gray-400 text-xs">AVG SCORE</div>
+                <div className="text-yellow-400 text-base font-bold">
                   {playerStats.gamesPlayed > 0 ? (playerStats.totalScore / playerStats.gamesPlayed).toFixed(1) : 0}
                 </div>
               </div>
@@ -774,7 +774,7 @@ const PrisonersDilemmaGame = () => {
         <style>{pixelFont}</style>
         <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
         <div className="bg-gray-800 border-4 border-gray-600 p-8 max-w-2xl w-full">
-          <h2 className="text-4xl text-yellow-400 text-center mb-6">
+          <h2 className="text-base text-yellow-400 text-center mb-6">
             {result.outcomeText}
           </h2>
 
@@ -783,7 +783,7 @@ const PrisonersDilemmaGame = () => {
             <div className="grid grid-cols-2 gap-8">
               {/* Player */}
               <div className="text-center">
-                <div className="text-green-400 text-lg mb-3">
+                <div className="text-green-400 text-base mb-3">
                   {playerName || 'YOU'}
                 </div>
                 <div className="flex flex-col items-center gap-4">
@@ -794,7 +794,7 @@ const PrisonersDilemmaGame = () => {
                       <ThumbsDown size={64} className="text-red-400" />
                     )}
                   </div>
-                  <div className="text-yellow-400 text-4xl font-bold">
+                  <div className="text-yellow-400 text-base font-bold">
                     +{result.playerPoints}
                   </div>
                 </div>
@@ -802,7 +802,7 @@ const PrisonersDilemmaGame = () => {
 
               {/* Opponent */}
               <div className="text-center">
-                <div className="text-red-400 text-lg mb-3">
+                <div className="text-red-400 text-base mb-3">
                   {currentOpponent.name}
                 </div>
                 <div className="flex flex-col items-center gap-4">
@@ -811,7 +811,7 @@ const PrisonersDilemmaGame = () => {
                     hairColor={currentOpponent.hairColor}
                     hatColor={currentOpponent.hatColor}
                     shoeColor={currentOpponent.shoeColor}
-                    size={5}
+                    size={3.75}
                   />
                   <div className="flex items-center justify-center gap-3">
                     {opponentChoice === 'cooperate' ? (
@@ -820,7 +820,7 @@ const PrisonersDilemmaGame = () => {
                       <ThumbsDown size={48} className="text-red-400" />
                     )}
                   </div>
-                  <div className="text-yellow-400 text-4xl font-bold">
+                  <div className="text-yellow-400 text-base font-bold">
                     +{result.opponentPoints}
                   </div>
                 </div>
@@ -832,12 +832,12 @@ const PrisonersDilemmaGame = () => {
           <div className="bg-gray-900 border-2 border-gray-700 p-4 mb-6">
             <div className="grid grid-cols-2 gap-4 text-center">
               <div>
-                <div className="text-gray-400 text-sm">YOUR TOTAL SCORE</div>
-                <div className="text-yellow-400 text-3xl font-bold">{playerStats.totalScore}</div>
+                <div className="text-gray-400 text-xs">YOUR TOTAL SCORE</div>
+                <div className="text-yellow-400 text-base font-bold">{playerStats.totalScore}</div>
               </div>
               <div>
-                <div className="text-gray-400 text-sm">GAMES PLAYED</div>
-                <div className="text-green-400 text-3xl font-bold">{playerStats.gamesPlayed}</div>
+                <div className="text-gray-400 text-xs">GAMES PLAYED</div>
+                <div className="text-green-400 text-base font-bold">{playerStats.gamesPlayed}</div>
               </div>
             </div>
           </div>
@@ -846,7 +846,7 @@ const PrisonersDilemmaGame = () => {
           <div className="space-y-3">
             <button
               onClick={playAgain}
-              className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-6 border-4 border-green-800 text-xl"
+              className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-6 border-4 border-green-800 text-base"
             >
               🎲 NEXT OPPONENT
             </button>
