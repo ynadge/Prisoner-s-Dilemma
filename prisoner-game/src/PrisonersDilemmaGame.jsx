@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ThumbsUp, ThumbsDown, Trophy, RotateCcw, Brain } from 'lucide-react';
 
 // Add pixel font
@@ -216,8 +216,9 @@ const AI_OPPONENTS = [
 ];
 
 // Pixel art component for prisoner
-const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, animationDelay = 0, showShadow = true }) => {
+const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, shadowSize = null, animationDelay = 0, showShadow = true }) => {
   const scale = size;
+  const shadowScale = shadowSize ?? size; // Use shadowSize if provided, otherwise match size
   
   return (
     <div style={{ 
@@ -226,16 +227,19 @@ const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, ani
       alignItems: 'center',
       position: 'relative'
     }}>
-      <div 
-        className="prisoner-bob"
-        style={{ 
-          display: 'inline-block', 
-          imageRendering: 'pixelated',
-          transform: `scale(${scale})`,
-          transformOrigin: 'center bottom',
-          animationDelay: `${animationDelay}s`
-        }}>
-        <svg width="16" height="24" viewBox="0 0 16 24" style={{ imageRendering: 'pixelated' }}>
+      {/* Outer wrapper for scale, inner div for animation */}
+      <div style={{ 
+        transform: `scale(${scale})`,
+        transformOrigin: 'center bottom'
+      }}>
+        <div 
+          className="prisoner-bob"
+          style={{ 
+            display: 'inline-block', 
+            imageRendering: 'pixelated',
+            animationDelay: `${animationDelay}s`
+          }}>
+          <svg width="16" height="24" viewBox="0 0 16 24" style={{ imageRendering: 'pixelated' }}>
           {/* Shoes */}
           <rect x="4" y="22" width="3" height="2" fill={shoeColor} />
           <rect x="9" y="22" width="3" height="2" fill={shoeColor} />
@@ -292,15 +296,16 @@ const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, ani
               <rect x="4" y="2" width="8" height="1" fill={hatColor} />
             </>
           )}
-        </svg>
+          </svg>
+        </div>
       </div>
       {/* Shadow */}
       {showShadow && (
         <div 
           className="prisoner-shadow"
           style={{
-            width: `${12 * scale}px`,
-            height: `${4 * scale}px`,
+            width: `${12 * shadowScale}px`,
+            height: `${4 * shadowScale}px`,
             backgroundColor: '#000',
             borderRadius: '50%',
             marginTop: `${-2 * scale}px`,
@@ -314,39 +319,35 @@ const PixelPrisoner = ({ skinTone, hairColor, hatColor, shoeColor, size = 8, ani
 
 const PrisonersDilemmaGame = () => {
   const [gameState, setGameState] = useState('menu'); // menu, playing, results
-  const [playerName, setPlayerName] = useState('');
+  const [playerName, setPlayerName] = useState(() => {
+    try {
+      const nameData = localStorage.getItem('player_name');
+      return nameData ? JSON.parse(nameData) : '';
+    } catch {
+      return '';
+    }
+  });
   const [currentOpponent, setCurrentOpponent] = useState(null);
   const [playerChoice, setPlayerChoice] = useState(null);
   const [opponentChoice, setOpponentChoice] = useState(null);
   const [result, setResult] = useState(null);
-  const [playerStats, setPlayerStats] = useState({ totalScore: 0, gamesPlayed: 0, cooperations: 0, defections: 0 });
-  const [gameHistory, setGameHistory] = useState({});
-  const [showInstructions, setShowInstructions] = useState(false);
-
-  useEffect(() => {
-    loadGameData();
-  }, []);
-
-  const loadGameData = () => {
+  const [playerStats, setPlayerStats] = useState(() => {
     try {
       const statsData = localStorage.getItem('player_stats');
-      if (statsData) {
-        setPlayerStats(JSON.parse(statsData));
-      }
-
-      const historyData = localStorage.getItem('game_history');
-      if (historyData) {
-        setGameHistory(JSON.parse(historyData));
-      }
-
-      const nameData = localStorage.getItem('player_name');
-      if (nameData) {
-        setPlayerName(JSON.parse(nameData));
-      }
+      return statsData ? JSON.parse(statsData) : { totalScore: 0, gamesPlayed: 0, cooperations: 0, defections: 0 };
     } catch {
-      console.log('No saved data found, starting fresh');
+      return { totalScore: 0, gamesPlayed: 0, cooperations: 0, defections: 0 };
     }
-  };
+  });
+  const [gameHistory, setGameHistory] = useState(() => {
+    try {
+      const historyData = localStorage.getItem('game_history');
+      return historyData ? JSON.parse(historyData) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const saveGameData = (stats, history) => {
     try {
@@ -482,7 +483,7 @@ const PrisonersDilemmaGame = () => {
               Axelrod's Prison
             </h1>
             <p className="text-gray-400 text-lg">
-              Cooperate or Defect, But Win to Escape!
+              A Game That Teaches You Game Theory...<br></br>If You Play it a Hundred Times
             </p>
           </div>
 
@@ -541,12 +542,13 @@ const PrisonersDilemmaGame = () => {
             
             {showInstructions && (
               <div className="mt-4 text-green-300 space-y-2" style={{ fontSize: '14px' }}>
-                <p>"Everybody in here is innocent. Didn't you know that?"</p>
-                <p>• Both defect: 1 pt each</p>
-                <p>• One defects: 5 pts (defector), 0 pts (cooperator)</p>
-                <p className="mt-4 text-yellow-400">• Face random AI prisoners with different strategies</p>
-                <p className="text-yellow-400">• Build history with each prisoner over multiple rounds</p>
-                <p className="text-yellow-400">• Learn their patterns and adapt your strategy!</p>
+                <p className="text-gray-400 italic mb-3">"Everybody in here is innocent. Didn't you know that?"</p>
+                <p className="text-gray-300 mb-3">Listen up, fresh meat. You and your so-called "accomplices" are gonna be taken in for questioning. One at a time, we'll put you in a room with each of them. You can stay silent or rat them out. Here's how it works:</p>
+                <p>• Both stay silent (cooperate): 3 pts each</p>
+                <p>• Both rat each other out (defect): 1 pt each</p>
+                <p>• One rats, one stays silent: 5 pts (rat), 0 pts (sucker)</p>
+                <p className="mt-3 text-gray-300">You'll face each accomplice multiple times. They remember what you did last time... and so should you.</p>
+                <p className="mt-3 text-yellow-400 italic">Word around the yard is, the prisoner with the most points gets to walk free. Just saying.</p>
               </div>
             )}
           </div>
@@ -556,7 +558,7 @@ const PrisonersDilemmaGame = () => {
             <h2 className="text-yellow-400 text-xl mb-4">
               THE PRISONERS
             </h2>
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="grid grid-cols-5 gap-6 justify-items-center pt-30">
               {AI_OPPONENTS.map((opponent, index) => (
                 <PixelPrisoner 
                   key={opponent.id}
@@ -564,7 +566,8 @@ const PrisonersDilemmaGame = () => {
                   hairColor={opponent.hairColor}
                   hatColor={opponent.hatColor}
                   shoeColor={opponent.shoeColor}
-                  size={3}
+                  size={6}
+                  shadowSize={3}
                   animationDelay={index * 0.1}
                 />
               ))}
@@ -577,7 +580,7 @@ const PrisonersDilemmaGame = () => {
               onClick={startGame}
               className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 px-6 border-4 border-green-800 text-xl"
             >
-              🎲 FACE RANDOM OPPONENT
+              QUESTIONING TIME
             </button>
             
             {playerStats.gamesPlayed > 0 && (
